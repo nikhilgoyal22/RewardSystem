@@ -1,18 +1,22 @@
 class RewardsController < ApplicationController
+  include Validator
+
   def index
-    data = params[:file].read.split("\n").map.with_index do |row, index|
-      line = row.strip.split(' ')
-      line[3] == 'accepts' ? {node: line[2], accepts: true} : {node: line[4], parent: line[2]}
-    end
-    
-    render json: {data: process_and_calculate(data)}
+    data = validate(params[:file].read.split("\n"))
+    result, status = process_and_calculate(data)
+    render json: result, status: status
   end
 
   private
 
-  def process_and_calculate(data)
+  def build_tree(data)
     @tree = Tree.new
     @tree.build(data)
-    @tree.calculate
+  end
+
+  def process_and_calculate(data)
+    build_tree(data)
+    return [{errors: validation_errors + @tree.errors}, 422] if @tree.errors.present?
+    [@tree.calculate, :ok]
   end
 end

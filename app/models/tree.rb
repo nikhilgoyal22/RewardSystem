@@ -1,5 +1,5 @@
 class Tree
-  attr_accessor :root, :node_map, :calculation
+  attr_accessor :root, :node_map, :calculation, :errors
 
   ROOT_NAME = 'system'
 
@@ -8,11 +8,13 @@ class Tree
     @root.tree = self
     @node_map = {}
     @calculation = {}
+    @errors = []
     @node_map[ROOT_NAME] = @root
   end
 
   def build(data)
     data.each do |line|
+      @index = line[:index]
       line[:accepts] ? update_node(line[:node]) : add_node(line[:node], line[:parent])
     end
   end
@@ -34,8 +36,15 @@ class Tree
 
   def update_node(node)
     current_node = node_map[node]
-    #add error if doesnt exist in node_map or parent is system
+    validate_accept(current_node)
+    return if errors.present? || current_node.accepted
     current_node.accepted = true
     node_map[node] = current_node
+  end
+
+  #add error if doesnt exist in node_map or parent is system node
+  def validate_accept(node)
+    errors << {line_num: @index + 1, msg: 'No invitation exists to accept'} if node.nil?
+    errors << {line_num: @index + 1, msg: 'User already exists'} if node&.parent&.is_root?
   end
 end
