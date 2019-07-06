@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RewardsController < ApplicationController
   include Validator
 
@@ -17,7 +19,8 @@ class RewardsController < ApplicationController
   def process_and_calculate(data)
     build_tree(data)
     errors = validation_errors + @tree.errors
-    return [{errors: errors}, 422] if errors.present?
+    return [{ errors: errors }, 422] if errors.present?
+
     [@tree.calculate, :ok]
   end
 end

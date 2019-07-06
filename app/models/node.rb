@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Node
   attr_accessor :name, :points, :accepted, :parent, :children, :tree
 
@@ -7,19 +9,20 @@ class Node
     @name = name
     @parent = parent
     @points = 0
-    @accepted = parent.nil? || parent.is_root?
-    @children = [] #only who have accepted
+    @accepted = parent.nil? || parent.root?
+    @children = [] # only who have accepted
     @tree = parent&.tree
     @parent.children << self if @accepted && !parent.nil?
   end
 
-  def is_root?
+  def root?
     name == Tree::ROOT_NAME
   end
 
   def calculate
-    return 0 if !(accepted && children.present?)
-    points = children.size + CHILD_REWARD_MULTIPLIER * children.map(&:calculate).reduce(:+)
+    return 0 if children.empty?
+
+    self.points = children.size + CHILD_REWARD_MULTIPLIER * children.map(&:calculate).reduce(:+)
     tree.calculation[name] = points
     points
   end

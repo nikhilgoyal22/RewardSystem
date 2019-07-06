@@ -1,0 +1,11 @@
+AllCops:
+  Exclude:
+    - Gemfile
+    - bin/**
+    - config/**/*
+Documentation:
+  Enabled: false
+Metrics/LineLength:
+  Max: 120
+ClassAndModuleChildren:
+  Enabled: false

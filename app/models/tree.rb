@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Tree
   attr_accessor :root, :node_map, :calculation, :errors
 
@@ -20,7 +22,7 @@ class Tree
   end
 
   def calculate
-    root.children.map{|node| node.calculate }
+    root.children.map(&:calculate)
     calculation
   end
 
@@ -30,6 +32,7 @@ class Tree
     parent_node = node_map[parent] ||= add_node(parent)
     existing_node = validate_recommends(node_map[node], parent_node)
     return if @line_errors.present?
+
     insert_node(node, parent_node) if existing_node.nil?
   end
 
@@ -41,6 +44,7 @@ class Tree
     current_node = node_map[node]
     validate_accept(current_node)
     return if @line_errors.present? || current_node.accepted
+
     accept_node(current_node)
   end
 
@@ -57,15 +61,15 @@ class Tree
     node
   end
 
-  #add error if doesnt exist in node_map or parent is system node
+  # add error if doesnt exist in node_map or parent is system node
   def validate_accept(node)
     @line_errors = []
     add_error(@index, 'No invitation exists to accept') if node.nil?
-    add_error(@index, "Customer #{node.name} already exists") if node&.parent&.is_root?
+    add_error(@index, "Customer #{node.name} already exists") if node&.parent&.root?
   end
 
   def add_error(index, message)
-    error = {line_num: index + 1, message: message}
+    error = { line_num: index + 1, message: message }
     errors << error
     @line_errors << error
   end
