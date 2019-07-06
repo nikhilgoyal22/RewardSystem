@@ -11,11 +11,18 @@ class Tree
     @node_map[ROOT_NAME] = @root
   end
 
-  def build#(data)
-    dummy_data.each do |line|
+  def build(data)
+    data.each do |line|
       line[:accepts] ? update_node(line[:node]) : add_node(line[:node], line[:parent])
     end
   end
+
+  def calculate
+    root.children.map{|node| node.calculate }
+    calculation
+  end
+
+  private
 
   def add_node(node, parent = ROOT_NAME)
     return unless node_map[node].nil?
@@ -30,22 +37,5 @@ class Tree
     #add error if doesnt exist in node_map or parent is system
     current_node.accepted = true
     node_map[node] = current_node
-  end
-
-  def calculate
-    root.children.map{|node| node.calculate }
-    calculation
-  end
-
-  def dummy_data
-    [
-      {node: 'B', parent: 'A'},
-      {node: 'B', accepts: true},
-      {node: 'C', parent: 'B'},
-      {node: 'C', accepts: true},
-      {node: 'D', parent: 'C'},
-      {node: 'D', parent: 'B'},
-      {node: 'D', accepts: true}
-    ]
   end
 end
