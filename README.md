@@ -1,24 +1,21 @@
-# README
+# Reward System Coding Challenge
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+After reading the problem, the data structure which was apparent was **Tree** as the system resembled like a pyramid scheme and customer recommended by other is his/her can be taken as child node.
 
-Things you may want to cover:
+So, I first created tree structure using tree and node models. Also, I created a system node to attach all those customers who are initial ones and not recommended by anyone.
 
-* Ruby version
+After testing with dummy data in the form which tree will accept, I created a controller to accept file as a webservice and process to form the data which can be passed to the tree.
 
-* System dependencies
+Then I added validations for the file data and fixed some issues.
 
-* Configuration
+Following are the instruction was installation and testing.
 
-* Database creation
+### Install:
+ - `git clone https://github.com/nikhilgoyal22/RewardSystem.git`
+ - `cd RewardSystem/`
+ - `bundle install`
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Run:
+ - `rails s`
+ - `curl -X POST localhost:3000/rewards -F "file=@test_file.txt" -H "Content-Type: multipart/form-data"`
+ - Or you can use Postman
