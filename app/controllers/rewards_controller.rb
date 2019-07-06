@@ -16,7 +16,8 @@ class RewardsController < ApplicationController
 
   def process_and_calculate(data)
     build_tree(data)
-    return [{errors: validation_errors + @tree.errors}, 422] if @tree.errors.present?
+    errors = validation_errors + @tree.errors
+    return [{errors: errors}, 422] if errors.present?
     [@tree.calculate, :ok]
   end
 end

@@ -8,8 +8,9 @@ class Node
     @parent = parent
     @points = 0
     @accepted = parent.nil? || parent.is_root?
-    @children = []
+    @children = [] #only who have accepted
     @tree = parent&.tree
+    @parent.children << self if @accepted && !parent.nil?
   end
 
   def is_root?
